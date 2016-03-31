@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="copyright" content="">
+<meta name="description" content="">
+
+<style>
+
+*{margin: 0;padding: 0;list-style: none;}
+#container{position: absolute;width: 100%;height: 100%;opacity: 0}
+#box{width:214px;height: 382px;position: absolute;left: 50%;margin-left: -107px;top:100px; overflow:hidden}
+#box ul{position: absolute;left: 0;top: 0;}
+li{width: 214px;height: 382px;float: left;background-repeat: no-repeat;}
+#mi{width: 236px;height: 479px;position: absolute;top: 58px;left: 50%;margin-left: -119px}
+#loading{position: absolute;left:50%;top:50%;margin-left: -120px;margin-top: -160px;font-family:微软雅黑}
+</style>
+<script src="../js/index.js"></script>
+<script>
+window.onload=function(){
+	var aLi = document.getElementsByTagName('li');
+	var oUl = document.getElementsByTagName('ul')[0];
+	var oCont = document.getElementById('container');
+	var oLoading = document.getElementById('loading');
+	var count = 1 ;
+	var total = 6;
+
+	//load效果
+	for(var i = 1 ; i < 6  ; i ++){
+		var oImg = document.createElement('img');	
+		oImg.onload  = function(){
+			count ++;
+			if(count == total){
+				oCont.style.opacity = 1;
+				oLoading.style.display = 'none'
+			}
+		};
+		oImg.onerror =  function(){
+			alert('加载图片失败 , 请稍候再试')
+		};
+		oImg.src =  'img/mi_'+i+'.png';
+	}
+	
+	oUl.style.width =  aLi[0].offsetWidth  *aLi.length + 'px';
+	var iNow  =  0 ;
+	oUl.onmousedown = function(ev){
+		clearInterval(oUl.timer);
+		var oEvent = ev||event;
+		var oDown =  oEvent.clientX;
+		var disX = oEvent.clientX -  oUl.offsetLeft ;
+		document.onmousemove = function(ev){
+			var oEvent = ev||event;
+			var cur  =  oEvent.clientX  - disX ;
+			var oX  =  oEvent.clientX -oDown;
+			
+			if(iNow == 0  && oX > 0){
+				cur  =  cur/5;
+			}
+			if(iNow == aLi.length -1  &&  oX < 0){
+				cur  = -oUl.offsetWidth + aLi[0].offsetWidth  +  oX/5  ;
+			}
+			oUl.style.left = cur  + 'px'	
+		};	  //onmousemove  end
+			
+		document.onmouseup = function(ev){
+			document.onmouseup = null;
+			document.onmousemove =  null;
+			var oEvent = ev||event;
+			var delta = oEvent.clientX - oDown;
+			
+			if(Math.abs(delta) < 70){
+				move(oUl,{left:-iNow * 214})
+			}else{
+				if(delta<0 ){
+					iNow ++;
+					if(iNow == aLi.length){
+						iNow = aLi.length -1;
+					}
+					move(oUl,{left:-iNow * 214})
+				}else{
+					iNow --;
+					if(iNow  <0){
+						iNow  = 0 ;
+					}
+					move(oUl,{left:-iNow * 214})
+				}
+			}  //else delta >50 end
+	
+		}	//document.onmouseup end
+	
+		return false;	
+	}	
+}
+</script>
+</head>
+<body>
+
+	<div id="loading"><img src="img/load.gif"><span style="position:absolute;bottom:-30px;display:inline-block;width:200px;left:35%">正在加载...请稍候..</span></div>
+	<div id="container">
+		<div style="background:url(img/mi_phone.png)" id="mi"></div>
+        <div id="box">
+            <ul>
+                <li style="background:url(img/mi_1.png)"></li>
+                <li style="background:url(img/mi_2.png)"></li>
+                <li style="background:url(img/mi_3.png)"></li>
+                <li style="background:url(img/mi_4.png)"></li>
+                <li style="background:url(img/mi_5.png)"></li>
+                <li style="background:url(img/mi_6.png)"></li>
+            </ul>
+        </div>
+	</div>
+
+
+</body></html>

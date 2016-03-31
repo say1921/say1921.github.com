@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<title></title>
+<style>
+*{margin:0;padding:0;list-style:none;}
+body{}
+#div1{ position:absolute;left:50%; margin-left:-150px;top:200px;width:300px; height:300px;}
+#div1 span{ position:absolute;left:50%;top:0; margin-left:-10px; margin-top:-10px;width:20px; height:20px; background:#fff; border-radius:50%;}
+</style>
+<script>
+
+window.onload = function(){
+
+	var oDiv = document.getElementById("div1");
+	var oSpan = oDiv.children[0];
+	var cx = oDiv.offsetWidth/2;
+	var cy = oDiv.offsetHeight/2;
+	var R  = oDiv.offsetWidth/2;
+	
+	
+	//startMove(oSpan,360,3000);
+	
+	function startMove(obj,iTarget,time,fnEnd){
+		move(obj,iTarget/2,time/2,"ease-in",function(){
+			move(obj,iTarget,time/2,"ease-out",fnEnd);
+		});
+	}
+	
+	var timer = null;
+	var i = 0;
+	timer = setInterval(function(){
+		var oSpan = document.createElement("span");
+		oDiv.appendChild(oSpan);
+		
+		(function(oSpan){
+			function next(){
+				oSpan.a = 0;
+				startMove(oSpan,360,3000,next);
+			};
+			next();
+			//startMove(oSpan,360,3000,next);
+		})(oSpan);
+		
+		i++;
+		if(i == 5){
+			clearInterval(timer);
+		}
+		
+	},300);
+	
+	
+	
+	function move(obj,iTarget,time,type,fnEnd){
+		var start = obj.a || 0;
+		var dis = iTarget - start;
+		var count = Math.round(time/16);
+		var n = 0;
+		clearInterval(obj.timer);
+		obj.timer = setInterval(function(){
+			n++;
+			
+			switch(type){
+				case "ease-in":
+					var a = n/count;
+					var cur = start + dis*a*a*a;
+					break;
+				case "ease-out":
+					var a = 1 - n/count;
+					var cur = start + dis*(1 - a*a*a);
+					break;
+			}
+			obj.a = cur;
+			setPos(obj,cur);
+			
+			if(n == count){
+				clearInterval(obj.timer);
+				fnEnd && fnEnd();
+			}
+		},16);
+		
+	}
+	
+
+function setPos(obj,a){
+	obj.style.left = cx + Math.sin(a*Math.PI/180)*R + "px";
+	obj.style.top  = cy - Math.cos(a*Math.PI/180)*R + "px";
+}
+
+
+
+};
+
+</script>
+</head>
+
+<body>
+<div id="div1">
+	<span></span>
+</div>
+
+</body>
+</html>

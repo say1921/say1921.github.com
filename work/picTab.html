@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+* { padding: 0; margin: 0; }
+li { list-style: none; }
+.box{ background: #ebebeb; margin: 40px; width:960px; height:540px; background-color:#CCC; margin:50px auto; position:relative; overflow:hidden;}
+.box .leftbut{ position:absolute; right:20px; background:url(img/hehe.png) no-repeat; z-index:999999999; top:200px; width:40px; height:72px;cursor:pointer;background-position:-94px 0;}
+.box .rightbut{ position:absolute; left:20px; background:url(img/hehe.png) no-repeat; z-index:999999999; top:200px; width:40px; height:72px;cursor:pointer;background-position:-94px -87px; }
+.box .leftbut:hover{   cursor:pointer; background-position:-46px 0; }
+.box .rightbut:hover{ cursor:pointer; background-position:-46px -87px; }
+.box .ul1{ position:absolute; top:0px; left:0;}
+.box .ul1 li{ height:540px; float:left; position:relative;}
+.box .ul1 li.active{ z-index:1; opacity:1; filter:alpha(opactiy=100)}
+.box .ul1 .bg{ height:130px; width:100%; background-color:#000; position:absolute; top:410px; left:0; opacity:0.6; z-index:2}
+.box .ul1 b{ position:absolute; z-index:3; font-size:20px; left:40px; color:#FFF; font-family:'微软雅黑'; top:450px}
+.box .ul1 b span{ display:block; margin-top:10px; font-weight:normal; font-size:12px}
+.box .ul2{ position:absolute; bottom:0px; height:40px; z-index:99999999; right:10px; }
+.box .ul2 li{ width:16px; height:16px; background-color:#FFF; cursor:pointer; float:left;margin-right:7px; margin-top:10px; }
+.box .ul2 li.active{ background-color:#39F}
+</style>
+
+<script>
+window.onload =function(){
+	
+	function getStyle(obj, name)
+	{
+		if(obj.currentStyle)
+		{
+			return obj.currentStyle[name];
+		}
+		else
+		{
+			return getComputedStyle(obj, false)[name];
+		}
+	}
+	
+/*function starMove(obj,json,fnEnd){
+	clearInterval(obj.timer);
+	obj.timer = setInterval(function(){
+		var bStar = true;
+		for(attr in json){
+			if(attr == 'opacity'){
+				var cur = Math.round(parseFloat(getStyle(obj,attr))*100)
+			}else{
+				var cur = parseInt(getStyle(obj,attr));
+			}
+			var speed = (json[attr]-cur)/4;
+			speed = speed>0?Math.ceil(speed):Math.floor(speed);
+			if(cur !=  json[attr]) bStar = false;
+			
+				if(attr == 'opacity'){
+					obj.style.opacity = (cur + speed)/100;
+					obj.style.filter = 'alpha(opacity:('+cur+speed+'))';
+				}else{
+					obj.style[attr] = cur + speed+ 'px'
+				}
+		}
+		if(bStar){
+			clearInterval(obj.timer)
+			if(fnEnd) fnEnd();	
+		}
+		
+	},30)
+}*/
+	
+	function addMouseWheel(obj,fn){
+		var down=false;
+		
+		if(window.navigator.userAgent.indexOf('Firefox')!=-1){
+			obj.addEventListener('DOMMouseScroll',function(ev){
+				var oEvt=ev||event;
+				if(oEvt.detail>0) down=true;
+				else if(oEvt.detail<0) down = false;
+				oEvt.preventDefault&&oEvt.preventDefault();
+				fn(down)
+			},false);
+		}else{
+			obj.onmousewheel=function(ev){
+				var oEvt=ev||event;
+				if(oEvt.wheelDelta<0) down=true;
+				else if(oEvt.wheelDelta>0) down=false;
+				fn(down);
+				
+			};
+		}
+		
+	}
+	
+	var oBox = document.getElementById('box');
+	var oUl1 =document.getElementById('ul1');
+	var aLi1 =oUl1.getElementsByTagName('li');
+	oUl1.style.width = aLi1[0].offsetWidth *aLi1.length + 'px'
+	var oUl2 =document.getElementById('ul2');
+	var aLi2 =oUl2.getElementsByTagName('li');
+	var oDown =  document.getElementById('rightbut')
+	var oUp =document.getElementById('leftbut');
+	var nump = document.getElementById('nump')
+	oUl1.innerHTML +=oUl1.innerHTML;
+	oUl1.style.width = aLi1.length*aLi1[0].offsetWidth + 'px';
+	var len  = aLi2.length;
+	var w= oUl1.offsetWidth/2;
+	var now =0;
+	var timer1 = null;
+	//滚轮控制滚动
+	
+	addMouseWheel(oBox,function(down){
+		clearInterval(timer1)
+		if(down){
+			next()	
+		}else{
+			up()
+			
+		}	
+	})
+	
+
+	//alert(oDown)
+
+	nump.innerHTML = '<span style="color:#09F;font-weight:bold">'+(1)+'</span>/5';
+	for(var i=0 ;i<aLi2.length;i++){
+		(function(index){
+			
+			aLi2[i].onclick = function(){
+				//0 --> 4  iNow--
+				if(aLi2[0].className =='active' &&  index== 0){
+					now --;
+				}else if(aLi2[4].className =='active' &&  index== 4){
+					now ++;
+				}else{
+					now = Math.floor(now/5)*5 + index ;
+				}
+				now= index;
+				tab()
+			}
+		})(i)
+	}
+	
+	document.onkeydown=function(ev){
+		clearInterval(timer1)
+		var oEvt=ev||event;
+		switch(oEvt.keyCode){
+			case 37:
+				up();
+				break;	
+			case 39:
+				next()		
+		}
+	};
+
+	oDown.onclick =up ;
+	oUp.onclick = next;
+	
+	function next(){
+		now ++;	
+		tab()
+	}
+	
+	function up(){
+		now --;
+		tab()
+	}
+	
+	//定时器
+	timer1 = setInterval(next,3000);
+	oBox.onmousemove =function(){
+		clearInterval(timer1)
+	}
+	oBox.onmouseout =function(){
+		timer1 = setInterval(next,3000);
+	}
+	
+
+	//函数
+	function tab(){
+		for(var i =0; i<aLi2.length; i++){
+			aLi2[i].className = '';
+			nump.innerHTML = '';
+		}	
+		if(now<0){   //iNow =-1;
+			aLi2[(now%len+len)%len].className = 'active';
+		}else{ 		  //iNow >0;
+			aLi2[now%len].className = 'active';
+		}		
+		move(oUl1,-aLi1[0].offsetWidth*now)
+		nump.innerHTML = '<span style="color:#09F;font-weight:bold">'+(((now%len+len)%len)+1)+'</span>/5'
+	}
+
+
+	var left = 0;
+	var timer =null;
+	function move(obj,iTarget){
+		var start = left;
+		var dis = iTarget-start;
+		var time =700;
+		var count = Math.round(700/30);
+		var n = 0;
+		
+		clearInterval(obj.timer)
+		obj.timer = setInterval(function(){
+			n++;
+			var a =1 -n/count;
+			a = 1- Math.pow(a,3)
+			left = start+ dis*a;
+			if(left<0){ //右
+				obj.style.left  = left%w + 'px';		
+			}else{
+				obj.style.left  = (left%w-w)%w + 'px';	
+			}
+			if(n==count){
+				clearInterval(obj.timer)
+			}
+		},30);
+		
+	}
+
+}
+</script>
+</head>
+
+<body>
+<div class="box" id="box">
+	<div style="position:absolute; bottom:40px; font-size:24px; z-index:999; color:#FFF; right:17px;" id="nump"><span style="color:#09F; font-weight:bold"></span></div>
+	<ul id="ul1" class="ul1">
+    	<li class="active">
+        	<div class="img"> <img src="img/1.jpg"></div>
+            <p class="bg"></p>
+            <b>速度与激情7<span>谨以此片, 献给永远青春的保罗沃克</span></b>
+        </li>
+        <li>
+        	<div class="img"> <img src="img/2.jpg"></div>
+            <p class="bg"></p>
+            <b>花田少年史(下)<span>童心是很奢侈的东西 , 初恋也是</span></b>
+        </li>
+        <li>
+        	<div class="img"> <img src="img/3.jpg"></div>
+            <p class="bg"></p>
+            <b>红地毯<span>拍色情片也是有尊严的</span></b>
+        </li>
+        <li>
+        	<div class="img"> <img src="img/4.jpg"></div>
+            <p class="bg"></p>
+           <b>午夜巴塞罗那<span>爱情是什么?</span></b>
+        </li>
+        <li>
+        	<div class="img"> <img src="img/5.jpg"></div>
+            <p class="bg"></p>
+            <b>浅坟<span>利欲熏心 , 何为理性?</span></b>
+        </li>
+    </ul>
+    
+    <div class="btn">
+        <span id="leftbut" class="leftbut"></span>
+        <span id="rightbut" class="rightbut"></span>
+    </div>
+    
+    <ul id="ul2" class="ul2">
+    	<li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    	
+    
+    
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)http://www.zhinengshe.com/stu_work/yujingyu/work/chrome_ico.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="author" content="智能社 - zhinengshe.com">
+<meta name="copyright" content="智能社 - zhinengshe.com">
+<title>仿chrome浏览器应用中心效果</title>
+<style>
+body{ background-color:#FFF;}
+*{ margin:0; padding:0; list-style:none;}
+#ul1{ width:1020px; position:relative; left:50%; margin-left:-510px; top:150px}
+#ul1 li{ width:130px; height:160px; float:left; text-align:center; line-height:100px; color:#000; margin:20px;}
+#ul1 li img{width: 120px; height: 120px;}
+#ul1 li span{ height: 30px; width: 120px; line-height: 30px; position: absolute; left: 0; bottom: 0; font-family: '微软雅黑';}
+#ul1 li.box{ border:2px dashed #f00;}
+</style>
+<script src="index.js"></script>
+<script>
+
+window.onload = function(){
+	var oUl = document.getElementById("ul1");
+	var aLi = oUl.children;
+	var zIndex = 1;
+	//1 布局转换
+	var aPos = [];
+	for(var i = 0 ; i <aLi.length; i++){
+		aPos[i] = {left:aLi[i].offsetLeft,top:aLi[i].offsetTop};
+		aLi[i].style.left = aPos[i].left + 'px';
+		aLi[i].style.top = aPos[i].top + 'px';
+	}
+	
+	for(var i = 0 ; i <aLi.length; i++){
+		aLi[i].style.position = 'absolute'	
+		aLi[i].style.margin = 0;
+		drag(aLi[i])
+		//aLi[i].innerHTML = i;
+		aLi[i].index = i;
+	}
+	
+	
+	//拖拽
+	function drag(obj){
+		obj.onmousedown = function(e){
+			obj.style.zIndex = zIndex ++;
+			var oEvent = e||event;
+			var disX = oEvent.clientX- obj.offsetLeft ;
+			var disY = oEvent.clientY- obj.offsetTop ;
+			
+			document.onmousemove = function(e){
+				var oEvent = e||event;
+				obj.style.left = oEvent.clientX - disX + 'px';
+				obj.style.top = oEvent.clientY - disY + 'px';	
+				
+				//最近的
+
+				var oNear = findMin(obj);
+				//console.log(oNear)
+				if(oNear && oNear!=obj){
+					
+					n = obj.index  // 移动那个
+					m = oNear.index  //最近那个 
+					
+					if(n<m){
+						for(var i = 0; i<aLi.length; i++){
+							if(aLi[i].index >=n+1 && aLi[i].index <= m){
+								aLi[i].index--;
+								move(aLi[i],aPos[aLi[i].index])
+							}
+						}	
+					}else{
+						for(var i = 0; i<aLi.length; i++){
+							if(aLi[i].index >=m && aLi[i].index <= n-1){
+								aLi[i].index++;
+								move(aLi[i],aPos[aLi[i].index])
+							}
+						}	
+					}
+						// 把最近那个位置给移动的
+						obj.index = m;
+					
+				}//			
+			}
+			document.onmouseup= function(e){
+				document.onmouseup = null;	
+				document.onmousemove = null
+				obj.releaseCapture && obj.releaseCapture()	
+				move(obj,aPos[obj.index])
+
+			}
+			obj.setCapture && obj.setCapture()
+			return false;
+		}
+	}
+	
+	
+	//找最近的距离
+	function findMin(obj){
+		var iMin = 9999999;
+		var iMInIndex = -1 ; 
+		for(var i =0 ; i <aLi.length ; i++){
+			//if(obj ==aLi[i]) continue;  不要要判断自己了
+			if(collTest(obj,aLi[i])){
+				var dis = getDis(obj,aLi[i])   //算出距离
+				if(iMin>dis){ //比较
+					iMin = dis;
+					iMInIndex = i ;
+				}
+			}
+		}
+		return  aLi[iMInIndex];
+	}
+	///
+	
+	//算距离
+	function getDis(obj1,obj2){
+		var x1 = obj1.offsetLeft + obj1.offsetWidth/2 ;
+		var y1 = obj1.offsetTop + obj1.offsetHeight/2 
+		
+		var x2 = aPos[obj2.index].left + obj2.offsetWidth/2 ;
+		var y2 = aPos[obj2.index].top + obj2.offsetHeight/2 
+		
+		var a = x1 -x2 ;
+		var b = y1 -y2 ;
+		return Math.sqrt(a*a + b*b) 
+		
+	}
+	
+	
+	//碰撞检测
+	function collTest(obj1,obj2){
+		var l1 = obj1.offsetLeft;
+		var t1 = obj1.offsetTop;
+		var r1 = obj1.offsetLeft + obj1.offsetWidth;
+		var b1 = obj1.offsetTop + obj1.offsetHeight;
+		
+		var l2 = aPos[obj2.index].left;
+		var t2 = aPos[obj2.index].top;
+		var r2 = aPos[obj2.index].left + obj2.offsetWidth;
+		var b2 = aPos[obj2.index].top + obj2.offsetHeight;
+		
+		//判断没撞上的时候
+		if(l1>r2 || t1 >b2 || r1<l2 ||b1 <t2 ){
+			return false
+		}else{
+			return true
+		}
+	
+	}
+	
+	
+	
+		
+};
+
+
+</script>
+</head>
+
+<body>
+<ul id="ul1">
+	<li style="left: 20px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_1.png"><span>愤怒的小鸡</span></li>
+    <li style="left: 190px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_2.png"><span>胶片</span></li>
+    <li style="left: 360px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_3.png"><span>文件管理</span></li>
+    <li style="left: 530px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_4.png"><span>excel表格</span></li>
+    <li style="left: 700px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_5.png"><span>cs半条命</span></li>
+    <li style="left: 870px; top: 20px; position: absolute; margin: 0px;"><img src="chrome_6.png"><span>MSN</span></li>
+    <li style="left: 20px; top: 220px; position: absolute; margin: 0px;"><img src="chrome_7.png"><span>回收站</span></li>
+    <li style="left: 190px; top: 220px; position: absolute; margin: 0px;"><img src="chrome_8.png"><span>音乐播放器</span></li>
+    <li style="left: 360px; top: 220px; position: absolute; margin: 0px;"><img src="chrome_9.png"><span>Skype</span></li>
+</ul>
+
+
+
+</body></html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>是男人就撑20秒(beta)</title>
+<link href="style/game.css" type="text/css" rel="stylesheet" />
+<script src="js/game.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="bg">
+	<div id="img_logo"></div>
+	
+	<input class="btn" id="start" type="button" value="开始" />
+	<div id="progress">
+		<span></span>
+	</div>
+	<ul id="score">
+		<li>难度：1</li>
+		<li>得分：0</li>
+	</ul>
+	<div id="game_over">
+		<img src="img/game_over.jpg" alt="game_over" />
+		<div id="btn_pos">
+		<input class="btn" type="button" value="重新开始" onclick="window.location.reload()" />
+		</div>
+	</div>
+	<div id="man"></div>
+</div>
+<div id="shadow"></div>
+<div id="popup">
+	<form onsubmit="return auth();" id="form_score" action="http://www.zhinengshe.com" method="post" target="_blank">
+		<ul>
+			<li><var>分数：</var><span><input type="text" name="cmt_score" style="border:0; background:#EEE;" readonly /></span></li>
+			<li><var>难度：</var><span><input type="text" name="cmt_level" style="border:0; background:#EEE;" readonly /></span></li>
+			<li><var>姓名：</var><input type="text" name="cmt_name" /></li>
+		</ul>
+		<p>
+			<input class="btn" type="submit" value="提交"/>
+	</form>
+	<a href="###" id="clos">X</a>
+</div>
+</body>
+</html>

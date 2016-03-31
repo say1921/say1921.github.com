@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {margin:0; padding:0;}
+body {background:#CCC;}
+#ul1 {margin:40px auto; width:780px;}
+#ul1 li {width:200px; height:200px; background:white; float:left; margin:10px; list-style:none; padding:20px; box-shadow:2px 2px 2px #999; -webkit-transition:0.5s all ease;-moz-transition:0.5s all ease;-ms-transition:0.5s all ease;-o-transition:0.5s all ease;}
+#ul1 li a {-webkit-transition:0.5s all ease;-moz-transition:0.5s all ease;-ms-transition:0.5s all ease;-o-transition:0.5s all ease;}
+#ul1 li h2 {font-size:24px; line-height:40px; font-family:"Microsoft YaHei";}
+#ul1 li p {font-size:14px; line-height:18px;}
+#ul1 li p a{color:#F33; text-decoration:none;}
+#ul1 li p a:hover{text-decoration:underline; color:#F00;}
+#ul1 .back {text-shadow:0 0 10px black; -webkit-transform:scale(0.9);-moz-transform:scale(0.9);-ms-transform:scale(0.9);-o-transform:scale(0.9); box-shadow:0 0 10px 4px white; opacity:0.8; color:rgba(0,0,0,0);}
+#ul1 .back a {text-shadow:0 0 10px red; -webkit-transform:scale(0.9);-moz-transform:scale(0.9);-ms-transform:scale(0.9);-o-transform:scale(0.9); box-shadow:0 0 10px 4px white; opacity:0.8; color:rgba(255,0,0,0);}
+#ul1 .active {-webkit-transform:scale(1.1);-moz-transform:scale(1.1);-ms-transform:scale(1.1);-o-transform:scale(1.1); box-shadow:3px 3px 4px #888;}

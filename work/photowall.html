@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<meta name="description" content="" />
+<style type="text/css">
+*{margin: 0;padding: 0;list-style: none;font-family: '微软雅黑'}
+body{ background-color:#FFF}
+ul{width: 360px;height: 360px;position: relative;margin: 100px auto;}
+li{width: 98px;height: 98px;float: left;margin: 10px;text-align: center;line-height: 98px;}
+#change{width: 360px;height: 50px;background: #029df9;position: absolute;left: 50%;margin-left: -180px;border-radius: 20px;text-align: center;line-height: 50px;color:white;cursor: pointer;top: 40px}
+</style>
+<script  src="../js/index.js"></script>
+<script type="text/javascript">
+window.onload = function(){
+	var oBtn = document.getElementById('change');
+	var zIndex = 100;
+	var arr = [0,1,2,3,4,5,6,7,8];
+	//转换布局
+	var aLi = document.getElementsByTagName('li');
+	var aPos = [] ;
+	for(var i=0;i<aLi.length;i++){
+		var l = aLi[i].offsetLeft;
+		var t = aLi[i].offsetTop;
+		aPos.push({'left':l,'top':t});
+	}
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].style.left = aPos[i].left + "px"; 
+		aLi[i].style.top = aPos[i].top + "px"; 
+		aLi[i].style.position = 'absolute';
+		aLi[i].style.margin = 0;
+	}
+	for(var i = 0;i<aLi.length;i++){
+		drag(aLi[i]);
+		aLi[i].index = i;
+	}
+
+	//转换布局结束
+	oBtn.onclick=function(ev){
+		var oEvent = ev||event;
+		random();
+		oEvent.preventDefault && oEvent.preventDefault();
+		return false;
+	}
+	function random(){
+		arr.sort(function(){
+			return Math.random()-0.5;
+		})
+		for(var i=0;i<aLi.length;i++){
+			aLi[i].index = arr[i];
+			move(aLi[i],aPos[arr[i]]);
+		}
+	}
+
+	function collTest(obj1,obj2){
+		var l1 = obj1.offsetLeft;
+		var t1 = obj1.offsetTop;
+		var r1 = l1 + obj1.offsetWidth;
+		var b1 = t1 + obj1.offsetHeight;
+		
+		var l2 = obj2.offsetLeft;
+		var t2 = obj2.offsetTop;
+		var r2 = l2 + obj2.offsetWidth;
+		var b2 = t2 + obj2.offsetHeight;
+		
+		if(r1 < l2 || b1 < t2 || l1 > r2 || t1 > b2){
+			return false;	
+		} else {
+			return true;
+		}	
+	}
+
+	function findNearest(obj){
+		var iMin = 99999999;
+		var iMinIndex = -1;
+		//----------------------------
+		for(var i=0;i<aLi.length;i++){
+			if(obj == aLi[i]){
+				continue;
+			}else{
+				if(collTest(obj,aLi[i])){
+					
+					var a = obj.offsetLeft - aLi[i].offsetLeft;
+					var b = obj.offsetTop - aLi[i].offsetTop;
+					var c = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));
+					if(iMin > c){
+						iMin = c;
+						iMinIndex = i;
+					}
+				}
+			}
+		}
+		//---------------------
+		if(iMinIndex != -1){
+			return aLi[iMinIndex];
+		}else{
+			return null;
+		}
+	}
+
+
+	function drag(obj){
+		obj.onmousedown = function(ev){
+			clearInterval(obj.timer);
+		    obj.style.zIndex = ++zIndex;
+			var oEvent = ev||event;
+			var disX = oEvent.clientX - obj.offsetLeft;
+			var disY = oEvent.clientY - obj.offsetTop;
+			document.onmousemove = function(ev){
+				var oEvent = ev||event;
+				obj.style.left = oEvent.clientX - disX + "px";
+				obj.style.top = oEvent.clientY - disY + 'px';
+				
+				document.onmouseup = function(){
+					document.onmousemove = null;
+					document.onmouseup = null;
+					obj.releaseCapture&&obj.releaseCapture();
+					var fuck = findNearest(obj);
+					if(fuck){
+						var fns = findNearest(obj).index;
+						var obi = obj.index;
+						move(obj,aPos[fns]);
+						move(fuck,aPos[obi]);
+						
+						obj.index = fns;
+						fuck.index = obi;
+				}else{
+					move(obj,aPos[obj.index]);
+				}
+			}
+			obj.getCapture&&obj.getCapture();
+			return false;
+			}
+		}
+	}
+}
+</script>
+</head>
+<body>
+	<div id="change">点击我随便换>_<</div>
+	<ul>
+		<li style="background:url(img/head1.png)"></li>
+		<li style="background:url(img/head2.png)"></li>
+		<li style="background:url(img/head3.png)"></li>
+		<li style="background:url(img/head4.png)"></li>
+		<li style="background:url(img/head5.png)"></li>
+		<li style="background:url(img/head6.png)"></li>
+		<li style="background:url(img/head7.png)"></li>
+		<li style="background:url(img/head8.png)"></li>
+		<li style="background:url(img/head9.png)"></li>
+	</ul>
+</body>
+</html>

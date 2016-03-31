@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0063)http://www.zhinengshe.com/stu_work/yujingyu/work/bigmirror.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>性感的莱昂纳多</title>
+<style>
+*{ padding:0px; margin:0px;}
+img{ border:0; border:none}
+#div1{ width:400px; height:250px; background:url(img/min.jpg) no-repeat center ; position:relative ;left:450px; top:20px;}
+#mark{ width:80px; height:80px; background-color:#09F; opacity:.5; position:absolute; top:0 ; left:0; display:none;filter:alpha(opacity=50)}
+#div2{ width:500px; height:350px; position:absolute; top:295px; overflow:hidden; display:none; left:400px}
+#div2 img{ position:relative;; left:0; top:0;}
+#shade{width:400px; height:250px; background-color:#066; position:relative ; opacity:0;left:0; top:0;z-index:2;filter:alpha(opacity=0)}
+</style>
+<script>
+window.onload = function(){
+	var oDiv1 = document.getElementById('div1');
+	var oDiv2 = document.getElementById('div2');
+	var oMark = document.getElementById('mark');
+	var oImg  = oDiv2.children[0];
+	var shade = document.getElementById('shade');
+	
+	oDiv1.onmouseover = function(e){
+		var eve = e||event;
+		var from = eve.fromElement || eve.relatedTarget;
+		if(from && !oDiv1.contains(from)){
+			oDiv2.style.display  ='block';
+			oMark.style.display  = 'block'
+		}
+		
+	}
+	
+	oDiv1.onmouseout = function(e){
+		var eve = e||event;
+		var oto = eve.toElement || eve.relatedTarget;
+		if(oto && !oDiv1.contains(oto)){
+			oDiv2.style.display  ='none';
+			oMark.style.display = 'none'
+		}
+	}
+	
+	oDiv1.onmousemove = function(e){
+		var oEvt = e || event;
+		var l =oEvt.clientX -oDiv1.offsetLeft-oMark.offsetWidth/2;
+		var t =oEvt.clientY - oDiv1.offsetTop-oMark.offsetHeight/2;
+		if(l<=0){
+			l=0
+		}
+		if(t<=0){
+			t=0
+		}
+		if(t>oDiv1.offsetHeight - oMark.offsetHeight){
+			 t = oDiv1.offsetHeight- oMark.offsetHeight
+		}
+		if(l>oDiv1.offsetWidth - oMark.offsetWidth){
+			 l = oDiv1.offsetWidth- oMark.offsetWidth
+		}
+		
+		var scaleL = oMark.offsetLeft/(oDiv1.offsetWidth- oMark.offsetWidth);
+		var scaleT = oMark.offsetTop/(oDiv1.offsetHeight- oMark.offsetHeight);
+		
+		var oImgL =scaleL*(oDiv2.offsetWidth- oImg.offsetWidth)
+		var oImgT =scaleL*(oDiv2.offsetHeight- oImg.offsetHeight)
+		document.title =scaleT;
+		oMark.style.left = l +'px';
+		oMark.style.top  = t +'px';
+		oImg.style.left =  oImgL  +'px';
+		oImg.style.top  =  oImgT +'px';
+	}
+	
+}
+</script>
+</head>
+
+<body>
+<div id="div1">
+	<div id="mark"></div>
+</div>
+<div id="div2"><img src="max.jpg" width="1920"></div>
+
+
+</body></html>

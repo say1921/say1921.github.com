@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0065)http://www.zhinengshe.com/stu_work/yujingyu/work/addCalendar.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>无标题文档</title>
+
+<style>
+*{ padding:0; margin:0;}
+a{ text-decoration:none;}
+ul li{ list-style:none;}
+body{ font-family:'Helvetica'}
+.box{ width:312px; height:330px; background-color:#f5f5f5; text-align:center; position:absolute; top:50% ; left:50%;
+margin-left:-156px; margin-top:-165px}
+.box a{ font-size:30px; color:#c8c8c8;}
+.box p{ line-height:40px}
+.box .prev{}
+.box .prev, .box .next{ line-height:40px}
+.box span{ text-align:center; width:200px; display:inline-block; font-weight:bold; line-height:40px}
+.box ol{ list-style:none; margin-left:20px;width:312px;}
+.box ol li { float:left; width:40px; line-height:30px;}
+.box  ul{ clear:both; margin-left:20px;}
+.box  .pass{ color:#CCC;}
+.box .cur{ background-color:#0CF; color:#FFF}
+.box  ul li{ width:36px; line-height:36px; height:36px; float:left; background-color:#FFF; margin:2px; }
+</style>
+<script>
+window.onload= function(){
+	add()
+}
+
+	
+	function add(){
+		var oDiv = document.createElement('div');
+		oDiv.className = 'box';
+		document.body.appendChild(oDiv)	
+		oDiv.onclick = function(e){
+			var eve = e||event;
+			eve.cancelBubble = true;
+		}
+		
+		
+		
+		
+		
+		
+		var now= 0;
+		oDiv.innerHTML ='<p>\
+			<a href="javascript:;" class="prev">&lt;</a>\
+			<span>2019年1月</span>\
+			<a href="javascript:;" class="next">&gt;</a>\
+		</p>\
+		<ol>\
+			<li>一</li>\
+			<li>二</li>\
+			<li>三</li>\
+			<li>四</li>\
+			<li>五</li>\
+			<li style=" color:#f60">六</li>\
+			<li style=" color:#f60">日</li>\
+		</ol>\
+		<ul></ul>'
+		
+		var oPrev = oDiv.children[0].children[0];
+		var oNext= oDiv.children[0].children[2];
+		oPrev.onclick= function(){
+			now--;
+			fullTime()
+		}
+		
+		oNext.onclick= function(){
+			now++;
+			fullTime()
+		}
+		
+		
+		function fullTime(){
+			var oSpan= oDiv.children[0].children[1];
+			
+			var d= new Date();
+			d.setMonth(d.getMonth()+now);
+			year =d.getFullYear();
+			month =d.getMonth();
+			
+			oSpan.innerHTML = year + '年' + (month+ 1) + '月';
+			
+			var oUl = oDiv.children[2];
+			oUl.innerHTML =  '';
+			//获取每个月有多少天;
+			var d= new Date();
+			d.setMonth(d.getMonth()+now+1,0)
+			var m =d.getDate()
+			
+			for(i=1;i<=m;i++){
+				var aLi= document.createElement('li');
+				aLi.onclick= function(){
+					var t= d.getFullYear() + '年' +  (d.getMonth() +1) + '月' + this.innerHTML + '日'; 
+					relativeBtn.value = t;
+					oDiv.parentNode.removeChild(oDiv)
+				}
+				
+				
+				aLi.innerHTML = i;
+				oUl.appendChild(aLi)	
+			}
+			
+			//添加空白天
+			var d= new Date();
+			d.setMonth(d.getMonth()+now,1)
+			var m =d.getDay()   //获取每个月1号星期几;
+			if(m==0) m=7;
+			m--;
+			for(var i =0; i<m; i++){
+				var aLi= document.createElement('li');
+				oUl.insertBefore(aLi,oUl.children[0])
+			}
+			
+			//判断了
+			var d= new Date();
+			d.setMonth(d.getMonth()+now);
+			var date =d.getDate()  
+			if(now==0){
+				for(var i = 0 ; i<oUl.children.length; i++){
+					if(oUl.children[i].innerHTML == date){
+						oUl.children[i].innerHTML  ='今天';
+						oUl.children[i].className = 'cur'
+					}else if(oUl.children[i].innerHTML <date){
+						oUl.children[i].className = 'pass'
+					}
+				}
+			}else if(now<0){
+				for(var i = 0 ; i<oUl.children.length; i++){
+					oUl.children[i].className = 'pass';
+				}
+			}
+			
+		}
+		fullTime();
+	}
+
+</script>
+
+
+</head>
+
+<body>
+<!--<br />
+<br />
+<br />
+
+<br />
+<br />
+<br />
+<br />
+<input type="text" style="position:absolute; left:100px; top:200px"/>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
+<input type="text"  style="position:absolute; left:1000px; top:200px"/>-->
+
+<!--<div class="box">
+	<p>
+        <a href="javascript:;" class="prev">&lt;</a>
+        <span>2019年1月</span>
+        <a href="javascript:;" class="next">&gt;</a>
+    </p>
+	<ol>
+    	<li>一</li>
+        <li>二</li>
+        <li>三</li>
+        <li>四</li>
+        <li>五</li>
+        <li style=" color:#f60">六</li>
+        <li style=" color:#f60">日</li>
+    </ol>	
+    
+    <ul>
+    	<li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</\li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>31</li> 
+    </ul>
+</div>
+-->
+
+
+<div class="box"><p>			<a href="javascript:;" class="prev">&lt;</a>			<span>2016年3月</span>			<a href="javascript:;" class="next">&gt;</a>		</p>		<ol>			<li>一</li>			<li>二</li>			<li>三</li>			<li>四</li>			<li>五</li>			<li style=" color:#f60">六</li>			<li style=" color:#f60">日</li>		</ol>		<ul><li class="pass"></li><li class="pass">1</li><li class="pass">2</li><li class="pass">3</li><li class="pass">4</li><li class="pass">5</li><li class="pass">6</li><li class="pass">7</li><li class="pass">8</li><li class="pass">9</li><li class="pass">10</li><li class="pass">11</li><li class="pass">12</li><li class="cur">今天</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li></ul></div></body></html>

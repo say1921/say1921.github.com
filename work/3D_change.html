@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="copyright" content="">
+<meta name="description" content="">
+<style>
+*{margin: 0;padding: 0;list-style: none;}
+li{overflow: hidden;}
+#container{position: relative;margin: 100px auto;width: 500px;height: 300px}
+#li1{width: 150px;height: 230px;background: black;opacity:0.5;position: absolute;top: 50px;left:0;}
+#li2{width: 200px;height: 300px;background: black;position: absolute;left: 200px;top: 0}
+#li3{width: 150px;height: 230px;background: black;opacity:0.5;position: absolute;top: 50px;left:400px;}
+.iMages{position: absolute;left: 0;top: 0;height: 100%;}
+a{font-size: 50px;text-align: center;color:red;}
+</style>
+<script src="../js/index.js"></script>
+<script>
+window.onload=function(){
+	var aLi = document.getElementsByTagName('li');
+	var aPos = [];
+	var aA = document.getElementsByTagName('a');
+	for(var i=0;i<aLi.length;i++){
+	aA[0].onclick=function(){
+		return false;
+	}
+	aA[2].onclick=function(){
+		return false;
+	}
+	aLi[0].onclick = right;
+	aLi[2].onclick = left;
+	aPos[i] = 
+			{
+				'left':aLi[i].offsetLeft,
+				'top':aLi[i].offsetTop,
+				'opacity':getStyle(aLi[i],'opacity'),
+				'width':aLi[i].offsetWidth,
+				'height':aLi[i].offsetHeight,
+				'onclick':aLi[i].onclick,
+				'aonclick':aA[i].onclick
+			}
+		}
+
+	function right(){
+		aPos.push(aPos.shift());
+		for(var i = 0;i<aLi.length;i++){
+			move(aLi[i],{'left':aPos[i].left,'top': aPos[i].top,'opacity':aPos[i].opacity,'width':aPos[i].width,'height':aPos[i].height})
+			aLi[i].onclick = aPos[i].onclick;
+			aA[i].onclick = aPos[i].aonclick;
+			//aLi[i].style.left = aPos[i].left;
+			//aLi[i].style.top = aPos[i].top;
+			//aLi[i].style.opacity = aPos[i].opacity;
+	}
+}
+
+
+
+	function left(){
+		aPos.unshift(aPos.pop());
+		for(var i = 0;i<aLi.length;i++){
+			move(aLi[i],{'left':aPos[i].left,'top': aPos[i].top,'opacity':aPos[i].opacity,'width':aPos[i].width,'height':aPos[i].height})
+			aLi[i].onclick = aPos[i].onclick;
+			aA[i].onclick = aPos[i].aonclick;
+			//aLi[i].style.left = aPos[i].left;
+			//aLi[i].style.top = aPos[i].top;
+			//aLi[i].style.opacity = aPos[i].opacity;
+	}}
+	//document.onclick=function(){
+	//		left();
+	//	}
+}
+</script>
+</head>
+<body>
+	<div id="container">
+		<ul>
+			<li id="li1"><a href="javascripy:;"><img src="img/3dt_1.jpg" class="iMages"></a></li>
+			<li id="li2"><a href="javascripy:;"><img src="img/3dt_2.jpg" class="iMages"></a></li>
+			<li id="li3"><a href="javascripy:;"><img src="img/3dt_3.jpg" class="iMages"></a></li>
+		</ul>
+	</div>
+
+
+</body></html>
